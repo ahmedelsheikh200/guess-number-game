@@ -23,48 +23,40 @@ const button = document.querySelector(".btn.check");
 
 function check() {
     let message = document.querySelector(".message");
+    let userAnswer = Number(getValue()); // Convert the input to a number
+    document.getElementsByClassName("label-score")[0].innerHTML = `Score: ${score}`;
 
-    // Add the event listener to the button
-    button.addEventListener("click", () => {
-        let userAnswer = Number(getValue()); // Convert the input to a number
-        document.getElementsByClassName("label-score")[0].innerHTML = `Score: ${score}`;
+    // Check if the user input is valid
+    if (isNaN(userAnswer)) {
+        message.innerHTML = "⛔️ No number!";
+    } else if (userAnswer > rightAnswer) {
+        message.innerHTML = "📈 Too high!";
+        score--; // Decrease the score for an incorrect guess
+    } else if (userAnswer < rightAnswer) {
+        message.innerHTML = "📉 Too low!";
+        score--; // Decrease the score for an incorrect guess
+    } else if (userAnswer === rightAnswer) {
+        message.innerHTML = "🎉 Correct Number!";
+        document.querySelector(".number").innerHTML = rightAnswer;
+        document.body.style.backgroundColor = '#60b347';
+        button.disabled = true;
 
-        // Check if the user input is valid
-        if (isNaN(userAnswer)) {
-            message.innerHTML = "⛔️ No number!";
-        } else if (userAnswer > rightAnswer) {
-            message.innerHTML = "📈 Too high!";
-            score--; // Decrease the score for an incorrect guess
-        } else if (userAnswer < rightAnswer) {
-            message.innerHTML = "📉 Too low!";
-            score--; // Decrease the score for an incorrect guess
-        } else if (userAnswer === rightAnswer) {
-            message.innerHTML = "🎉 Correct Number!";
-            document.querySelector(".number").innerHTML = rightAnswer;
-            document.body.style.backgroundColor = '#60b347';
-            button.disabled = true;
-            // Update high score if current score is higher
-            if (score > highscore) {
-                highscore = score;
-                document.querySelector(".highscore").innerHTML = `🥇 Highscore: ${highscore}`;
-            }
-
+        // Update high score if current score is higher
+        if (score > highscore) {
+            highscore = score;
+            document.querySelector(".highscore").textContent = `🥇 Highscore: ${highscore}`; // Use textContent to avoid HTML duplication
         }
+    }
 
-        // Update the score display
-        document.getElementsByClassName("label-score")[0].innerHTML = `💯 Score: ${score}`;
-        
+    // Update the score display
+    document.getElementsByClassName("label-score")[0].innerHTML = `💯 Score: ${score}`;
 
-        // If score reaches 0, game over
-        if (score <= 0) {
-            message.innerHTML = "💥 You lost the game!";
-            document.getElementsByClassName("label-score")[0].innerHTML = `💯 Score: 0`;
-            button.disabled = true; // Disable further guesses
-            
-            
-        }
-        
-    });
+    // If score reaches 0, game over
+    if (score <= 0) {
+        message.innerHTML = "💥 You lost the game!";
+        document.getElementsByClassName("label-score")[0].innerHTML = `💯 Score: 0`;
+        button.disabled = true; // Disable further guesses
+    }
 }
 
 function again() {
@@ -82,8 +74,8 @@ function again() {
     });
 }
 
+// Add event listener to the button once
+button.addEventListener("click", check);
 
-// Call the check function to add event listener
-check();
-
+// Call the reset function to add event listener
 again();
